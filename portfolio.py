@@ -29,8 +29,9 @@ class Portfolio:
         self._exp = portfolio_expected_return
 
         # generate sequence of means and vars and
-        self.asset_returns = np.random.normal(self._exp, std_def_means, self.n)
+        means = np.random.normal(self._exp, std_def_means, self.n)
         vars = np.random.normal(mean_of_vars, std_def_var, self.n)
+        self.asset_returns = np.zeros_like(means)
 
         # init nxT matrix containing mean free retruns over time.
         S = np.zeros((T, self.n))
@@ -39,13 +40,16 @@ class Portfolio:
         for i in range(self.n):
 
             # generate random time sequence
-            P = np.random.normal(self.asset_returns[i], vars[i], T)
+            P = np.random.normal(means[i], vars[i], T)
 
             # calculate temporal mean
             P_mean = np.mean(P)
 
             # subtract temporal mean
             P = P-P_mean
+
+            # adjust self.asset_Retunrs
+            self.asset_returns[i] = P_mean
 
             # fill S
             S[:,i]=P
@@ -57,4 +61,3 @@ class Portfolio:
         # generate random weights
         self.asset_weights = np.asarray(np.random.randint(0, 100, self.n), dtype=np.float)
         self.asset_weights = self.asset_weights / np.sum(self.asset_weights)
-        print("done")
