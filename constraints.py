@@ -38,9 +38,16 @@ class Constraints:
         """
 
         # All weights must add up to 1
-        A = np.ones(self.input_porfolio.n)
-        b = 1
+        A = np.identity(self.input_porfolio.n)
+        b = np.ones((1,self.input_porfolio.n))
         return A, b
+    
+    def short_sales_constraint(self):
+        #All weights must be greater than zero, this is an inequality constraints
+        A = -np.identity(self.input_porfolio.n)
+        b = np.zeros((1,self.input_porfolio.n))
+        return A, b
+
 
     def transaction_cost_equality(self,purchase_weight_vector,sale_weight_vector,original_asset_weights):
         # FIXME: dont we need to define k?
@@ -50,6 +57,7 @@ class Constraints:
         :param purchase_weight_vector: defines the costs of purchases
         :param sale_weight_vector: defines costs of sales
         :param original_asset_weights: original weights of assets. # FIXME: why do we need this? cant we read it from self.input_portfolio?
+        #FIXME Answer: I agree
         :return: Tuple (A, b)
         """
 

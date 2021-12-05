@@ -16,3 +16,19 @@ if __name__ == '__main__':
 
     test = Portfolio(20, 5)
     print(np.sum(test.asset_weights))
+
+def basic_markowitz_set_up(Portfolio p, Constraints weight_sum, int risk):
+    P = p.covar_matrix
+    q = -risk*p.asset_returns
+    A = weight_sum.A
+    b = weight_sum.b
+    return P,q,A,b
+
+def short_sales_setup(Portfolio p, Constraints weight_sum, Constraints short_sales, int risk):
+    P = p.covar_matrix
+    q = -risk*p.asset_returns
+    A = weight_sum.A
+    b = weight_sum.b
+    G = short_sales.A
+    h = short_sales.b
+    return P,q,A,b,G,h
