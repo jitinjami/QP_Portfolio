@@ -4,7 +4,6 @@ This file defines constraints
 
 # imports
 import numpy as np
-
 from portfolio import Portfolio
 
 # Equality constraints
@@ -46,15 +45,19 @@ class Constraints:
         self.input_porfolio = input_porfolio
         self.n_assets = input_porfolio.n
         if n_res_vec is not None:
-            assert n_res_vec==2*self.n_assets or n_res_vec==(2*k+1)*self.n_assets,f"n_res_vec must be 2*n or (2*k+1)*n " \
-                                                                                  f"but is {n_res_vec}"
-        self.n_res_vec = n_res_vec
+            if k is not None:
+                assert n_res_vec == (2 *k+1) *self.n_assets, f"n_res_vec must be 2*n or (2*k+1)*n but is {n_res_vec}"
+            else:
+                assert n_res_vec==3*self.n_assets,f"n_res_vec must be 2*n or (2*k+1)*n but is {n_res_vec}"
+
+        self.n_res_vec = input_porfolio.n if n_res_vec is None else n_res_vec
         self._mode = NO_COST
         self.k = k
-        if n_res_vec == 2*self.n_assets:
+        if n_res_vec == 3 * self.n_assets:
             self._mode = FIX_COST
-        elif n_res_vec == (2*k+1)*self.n_assets:
-            self._mode = VAR_COST
+        if k is not None:
+            if n_res_vec == (2 * k + 1) * self.n_assets:
+                self._mode = VAR_COST
 
     def __set_equality_constraints(self, A_new, b_new):
         """

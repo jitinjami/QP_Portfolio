@@ -8,20 +8,61 @@ from cvxopt import matrix, solvers
 from portfolio import Portfolio
 from constraints import Constraints
 
-def basic_markowitz_set_up(p: Portfolio, weight_sum: Constraints, risk: int):
-    P = p.covar_matrix
-    q = -risk*p.asset_returns
-    A = weight_sum.A
-    b = weight_sum.b
-    return P,q,A,b
+def basic_markowitz_set_up(portfolio: Portfolio, t: float):
+    C = portfolio.covar_matrix
+    c = t * portfolio.asset_returns.reshape(portfolio.n, 1)
+    constraints = Constraints(portfolio)
+    constraints.add_weight_summation_constraint()
+    return C,c,constraints
 
-def short_sales_setup( p: Portfolio, weight_sum: Constraints, short_sales: Constraints, risk: int):
-    P = p.covar_matrix
-    q = -risk*p.asset_returns
-    A = weight_sum.A
-    b = weight_sum.b
-    G = short_sales.A
-    h = short_sales.b
-    return P,q,A,b,G,h
+def short_sales_setup(portfolio: Portfolio, t: float):
+    C = portfolio.covar_matrix
+    c = t * portfolio.asset_returns.reshape(portfolio.n, 1)
+    constraints = Constraints(portfolio)
+    constraints.add_weight_summation_constraint()
+    constraints.add_short_sales_constraint()
+    return C,c,constraints
+
+def fixed_transaction_cost_setup(portfolio: Portfolio, t: float):
+    n_x_solution = 3 * portfolio.n
+    constraints = Constraints(portfolio, n_res_vec=n_x_solution)
+    constraints.add_weight_summation_constraint()
+    constraints.add_short_sales_constraint()
+    constraints.add_random_fixed_transaction_cost_equality()
+    sigma = portfolio.covar_matrix
+    mu = portfolio.asset_returns.reshape(portfolio.n, 1)
+    p = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
+    q = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
+    c = np.vstack((mu, p, q)) * (t)
+    C = np.zeros((n_x_solution,n_x_solution))
+    C[0:portfolio.n, 0:portfolio.n] = sigma
+
+    return C,c,constraints
+
+
+def variable_transaction_cost_setup(portfolio: Portfolio, t: float, k: int):
+    assert k >= 1, f"k must be at least 1 but is {k}"
+    n_x_solution = (2*k+1) * portfolio.n
+    constraints = Constraints(portfolio, n_res_vec=n_x_solution, k=k)
+    constraints.add_weight_summation_constraint()
+    constraints.add_short_sales_constraint()
+    constraints.add_random_var_transaction_cost_equality()
+    sigma = portfolio.covar_matrix
+    mu = portfolio.asset_returns.reshape(portfolio.n, 1)
+    p = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
+    q = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
+    for i in range(k-1):
+        p = np.vstack((p,np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)))
+        q = np.vstack((q,np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)))
+
+    c = np.vstack((mu,p,q)) * (t)
+    C = np.zeros((n_x_solution,n_x_solution))
+    C[0:portfolio.n, 0:portfolio.n] = sigma
+
+    return C,c,constraints
+
+
+
+
 
 
