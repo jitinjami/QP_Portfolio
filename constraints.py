@@ -136,7 +136,7 @@ class Constraints:
         neg_eye = eye.copy()
         np.fill_diagonal(neg_eye,-1)
         A_new = np.hstack((eye,neg_eye,eye))
-        # FIXME: is this correct? b_new?
+        # FIXME: is this correct? b_new? Jitin: This is correct!
         b_new = self.input_porfolio.asset_weights.copy().reshape((len(self.input_porfolio.asset_weights),1))
         self.__set_equality_constraints(A_new=A_new, b_new=b_new)
 
@@ -156,7 +156,8 @@ class Constraints:
     def add_random_fixed_transaction_cost_equality(self):
         assert self._mode == FIX_COST, "to add this constraint, the Constraint object has to be configured to support " \
                                       "the fixed cost model"
-        #FIXME: the random initialization has to be fixed
+        #FIXME: the random initialization has to be fixed. Jitin: I think this is okay but we would need to manually initialise
+        #d and e vector.
         d = np.random.uniform(0.01*(1/self.n_assets),0.25*(1/self.n_assets),(self.n_assets))#FIXME: check order of e and d
         e = np.random.uniform(0.01*(1/self.n_assets),0.25*(1/self.n_assets),(self.n_assets))
         self.add_fixed_transaction_cost_equality(e, d)
@@ -203,7 +204,8 @@ class Constraints:
         self.__set_inequality_constraints(G_new=G_new,h_new=h_new)
 
     def add_random_var_transaction_cost_equality(self):
-        #FIXME: the random initialization has to be fixed
+        #FIXME: the random initialization has to be fixed. Jitin: We will need different d values for different constraints. Apart
+        #from that it all looks good
         assert self._mode == VAR_COST, "to add this constraint, the Constraint object has to be configured to support " \
                                       "the variable cost model"
         d = []
