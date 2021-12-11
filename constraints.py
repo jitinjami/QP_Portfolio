@@ -140,26 +140,40 @@ class Constraints:
         self.__set_equality_constraints(A_new=A_new, b_new=b_new)
 
         # add inequality constraints
-        zeros_block = np.zeros((2*self.n_assets,self.n_assets))
-        eye_2n = np.eye(2*self.n_assets)
-        neg_eye_2n = np.zeros_like(eye_2n)
-        np.fill_diagonal(neg_eye_2n,-1)
-        G_lower = np.hstack((zeros_block,neg_eye_2n))
-        G_upper = np.hstack((zeros_block, eye_2n))
-        G_new = np.vstack((G_lower,G_upper))
-        h_lower = np.zeros((2*self.n_assets,1))
-        h_new = np.vstack((h_lower,purchase_weight_vector.reshape(len(purchase_weight_vector),1),
-                           sale_weight_vector.reshape(len(sale_weight_vector),1)))
-        self.__set_inequality_constraints(G_new=G_new,h_new=h_new)
+        G_lower = np.zeros((self.n_res_vec,self.n_res_vec))
+        np.fill_diagonal(G_lower[self.n_assets:, self.n_assets:], -1)
+        h_lower = np.zeros((self.n_res_vec,1))
+        h_lower[self.n_assets:] = np.vstack((purchase_weight_vector.reshape(len(purchase_weight_vector),1),sale_weight_vector.reshape(len(sale_weight_vector),1)))
+        G_upper = np.zeros((self.n_res_vec,self.n_res_vec))
+        np.fill_diagonal(G_lower[self.n_assets:, self.n_assets:], 1)
+        h_upper = np.zeros((self.n_res_vec,1))
+
+        G_new= np.vstack((G_upper, G_lower))
+        h_new= np.vstack((h_upper, h_lower))
+        
+        
+        self.__set_inequality_constraints(G_new=G_new, h_new=h_new)
+
+        # zeros_block = np.zeros((2*self.n_assets,self.n_assets))
+        # eye_2n = np.eye(2*self.n_assets)
+        # neg_eye_2n = np.zeros_like(eye_2n)
+        # np.fill_diagonal(neg_eye_2n,-1)
+        # G_lower = np.hstack((zeros_block,neg_eye_2n))
+        # G_upper = np.hstack((zeros_block, eye_2n))
+        # G_new = np.vstack((G_lower,G_upper))
+        # h_lower = np.zeros((2*self.n_assets,1))
+        # h_new = np.vstack((h_lower,purchase_weight_vector.reshape(len(purchase_weight_vector),1),
+        #                    sale_weight_vector.reshape(len(sale_weight_vector),1)))
+        # self.__set_inequality_constraints(G_new=G_new,h_new=h_new)
 
     def add_random_fixed_transaction_cost_equality(self):
         assert self._mode == FIX_COST, "to add this constraint, the Constraint object has to be configured to support " \
                                       "the fixed cost model"
         #FIXME: the random initialization has to be fixed. Jitin: I think this is okay but we would need to manually initialise
         #d and e vector.
-        d = np.random.uniform(0.01*(1/self.n_assets),0.25*(1/self.n_assets),(self.n_assets))#FIXME: check order of e and d
+        d = np.random.uniform(0.01*(1/self.n_assets),0.25*(1/self.n_assets),(self.n_assets))#FIXME: check order of e and d, Jitin: The order is ok
         e = np.random.uniform(0.01*(1/self.n_assets),0.25*(1/self.n_assets),(self.n_assets))
-        self.add_fixed_transaction_cost_equality(e, d)
+        self.add_fixed_transaction_cost_equality(d, e)
 
     def add_var_transaction_cost_equality(self, purchase_weight_vector_list, sale_weight_vector_list):
 
