@@ -5,8 +5,6 @@ Please do not delete code snippets. If they hidder execution or increase runtime
 # imports
 from portfolio import Portfolio
 from constraints import Constraints
-import numpy as np
-from cvxopt import matrix, solvers
 from problem_formulations import *
 from optimizers import *
 
