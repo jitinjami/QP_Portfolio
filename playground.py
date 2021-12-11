@@ -25,9 +25,9 @@ if __name__ == '__main__':
     #FIXME Have to declare an p', q', d and e as a numpy array. 
     #We can manually do random initialization of p',q',d and e before calling fixed_transaction_cost_setup instead of using
     #add_random_fixed_transaction_cost_equality function within fixed_transaction_cost_setup
-
-
     #C,c, con = fixed_transaction_cost_setup(port, t)
+
+
     #FIXME Have to declare an feasible port.asset_weights because we need that as a starting point
     #FIXME Have to declare an p', q', d and e as a numpy array. 
     #We can manually do random initialization of p',q',d and e before calling variable_transaction_cost_setup instead of using
@@ -35,9 +35,9 @@ if __name__ == '__main__':
     #C,c, con = variable_transaction_cost_setup(port, t, k)
 
     x, x_buy, x_sell = solve_qp(C, c, con)
-    #print(x)
-    #print(x_buy)
-    #print(x_sell)
+    print(x)
+    print(x_buy)
+    print(x_sell)
     """
     #construct complete Constraints
     con = Constraints(port,(2*k+1)*n, k)
