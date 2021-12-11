@@ -30,4 +30,5 @@ dependencies:
   - pip:
     - argparse==1.4.0
     - cvxopt==1.2.7
+    - qpsolvers
 prefix: /Users/vbacher/.conda/envs/qp_portfolio
