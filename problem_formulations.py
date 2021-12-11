@@ -9,6 +9,7 @@ from portfolio import Portfolio
 from constraints import Constraints
 
 def basic_markowitz_set_up(portfolio: Portfolio, t: float):
+    assert t < 1, f"t must be less than 1 but is {t}"
     C = portfolio.covar_matrix
     c = t * portfolio.asset_returns.reshape(portfolio.n, 1)
     constraints = Constraints(portfolio)
@@ -16,6 +17,7 @@ def basic_markowitz_set_up(portfolio: Portfolio, t: float):
     return C,c,constraints
 
 def short_sales_setup(portfolio: Portfolio, t: float):
+    assert t < 1, f"t must be less than 1 but is {t}"
     C = portfolio.covar_matrix
     c = t * portfolio.asset_returns.reshape(portfolio.n, 1)
     constraints = Constraints(portfolio)
@@ -24,6 +26,7 @@ def short_sales_setup(portfolio: Portfolio, t: float):
     return C,c,constraints
 
 def fixed_transaction_cost_setup(portfolio: Portfolio, t: float):
+    assert t < 1, f"t must be less than 1 but is {t}"
     n_x_solution = 3 * portfolio.n
     constraints = Constraints(portfolio, n_res_vec=n_x_solution)
     constraints.add_weight_summation_constraint()
@@ -41,6 +44,7 @@ def fixed_transaction_cost_setup(portfolio: Portfolio, t: float):
 
 
 def variable_transaction_cost_setup(portfolio: Portfolio, t: float, k: int):
+    assert t < 1, f"t must be less than 1 but is {t}"
     assert k >= 1, f"k must be at least 1 but is {k}"
     n_x_solution = (2*k+1) * portfolio.n
     constraints = Constraints(portfolio, n_res_vec=n_x_solution, k=k)

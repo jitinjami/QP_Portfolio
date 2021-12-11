@@ -13,7 +13,7 @@ from optimizers import *
 # main
 if __name__ == '__main__':
 
-    n=20
+    n=2
     k=3
     t = 0.1
     port = Portfolio(n, 5)
@@ -22,11 +22,11 @@ if __name__ == '__main__':
 
     #C,c, con = basic_markowitz_set_up(port,t)
     #C,c, con = short_sales_setup(port, t)
-    #C,c, con = fixed_transaction_cost_setup(port, t)
-    C,c, con = variable_transaction_cost_setup(port, t, k)
+    C,c, con = fixed_transaction_cost_setup(port, t)
+    #C,c, con = variable_transaction_cost_setup(port, t, k)
+
     x, x_buy, x_sell = solve_qp(C, c, con)
-
-
+    print(x, x_buy, x_sell)
 
     """
     #construct complete Constraints

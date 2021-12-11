@@ -101,8 +101,7 @@ class Constraints:
         """
 
         # All weights must add up to 1
-        A_new = np.zeros((1,self.n_res_vec))
-        A_new[0,0:self.n_assets] = np.ones((1,self.n_assets))
+        A_new = np.ones((1,self.n_res_vec))
         b_new = np.ones((1,1))
         self.__set_equality_constraints(A_new=A_new, b_new=b_new)
     
@@ -113,9 +112,9 @@ class Constraints:
         :return: None
         """
 
-        G_new = np.zeros((self.n_assets, self.n_res_vec))
-        np.fill_diagonal(G_new, -1)
-        h_new = np.zeros((self.n_assets, 1))
+        G_new = np.zeros((self.n_res_vec,self.n_res_vec))
+        np.fill_diagonal(G_new[:self.n_assets, :self.n_assets], -1)
+        h_new = np.zeros((self.n_res_vec,1))
         self.__set_inequality_constraints(G_new=G_new, h_new=h_new)
 
 
