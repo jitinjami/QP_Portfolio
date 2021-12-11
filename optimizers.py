@@ -7,17 +7,21 @@ import numpy as np
 from cvxopt import matrix, solvers
 from portfolio import Portfolio
 from constraints import Constraints
+from qpsolvers import solve_qp
 
 # imported optimizers
 
 def solve_qp(C,c,constraints: Constraints):
+    n_assets = np.size(c)
     C = matrix(C)
     c = matrix(c.T[0])
 
     if hasattr(constraints,'A') and not hasattr(constraints,'G'):
         A = matrix(constraints.A)
         b = matrix(constraints.b.T[0])
-        sol = solvers.qp(C,c, A=A, b=b)
+        G = -matrix(np.eye(n_assets))   # negative n x n identity matrix
+        h = matrix(0.0, (n_assets ,1))
+        sol = solvers.qp(C,c, G, h, A, b)
     if hasattr(constraints,'G') and not hasattr(constraints,'A'):
         G = matrix(constraints.G)
         h = matrix(constraints.h.T[0])
@@ -27,7 +31,7 @@ def solve_qp(C,c,constraints: Constraints):
         b = matrix(constraints.b.T[0])
         G = matrix(constraints.G)
         h = matrix(constraints.h.T[0])
-        sol = solvers.qp(C,c, A=A, b=b, G=G, h=h)
+        sol = solvers.qp(C,c, G, h, A, b)
 
     # decompose solution
     x_complete = np.asarray(sol['x'])

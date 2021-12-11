@@ -7,6 +7,7 @@ from portfolio import Portfolio
 from constraints import Constraints
 import numpy as np
 from cvxopt import matrix, solvers
+from qpsolvers import solve_qp
 from problem_formulations import *
 from optimizers import *
 
@@ -21,12 +22,16 @@ if __name__ == '__main__':
     ### to test comment the different problems in or out ###
 
     #C,c, con = basic_markowitz_set_up(port,t)
-    #C,c, con = short_sales_setup(port, t)
+    C,c, con = short_sales_setup(port, t)
+
+
     #FIXME Have to declare an feasible port.asset_weights because we need that as a starting point
     #FIXME Have to declare an p', q', d and e as a numpy array. 
     #We can manually do random initialization of p',q',d and e before calling fixed_transaction_cost_setup instead of using
     #add_random_fixed_transaction_cost_equality function within fixed_transaction_cost_setup
-    C,c, con = fixed_transaction_cost_setup(port, t)
+
+
+    #C,c, con = fixed_transaction_cost_setup(port, t)
     #FIXME Have to declare an feasible port.asset_weights because we need that as a starting point
     #FIXME Have to declare an p', q', d and e as a numpy array. 
     #We can manually do random initialization of p',q',d and e before calling variable_transaction_cost_setup instead of using
