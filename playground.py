@@ -7,7 +7,6 @@ from portfolio import Portfolio
 from constraints import Constraints
 import numpy as np
 from cvxopt import matrix, solvers
-from qpsolvers import solve_qp
 from problem_formulations import *
 from optimizers import *
 
@@ -18,11 +17,10 @@ if __name__ == '__main__':
     k=3
     t = 0.1
     port = Portfolio(n, 5)
-
     ### to test comment the different problems in or out ###
 
-    #C,c, con = basic_markowitz_set_up(port,t)
-    C,c, con = short_sales_setup(port, t)
+    C,c, con = basic_markowitz_set_up(port,t)
+    #C,c, con = short_sales_setup(port, t)
 
 
     #FIXME Have to declare an feasible port.asset_weights because we need that as a starting point
@@ -39,10 +37,9 @@ if __name__ == '__main__':
     #C,c, con = variable_transaction_cost_setup(port, t, k)
 
     x, x_buy, x_sell = solve_qp(C, c, con)
-    print(x)
-    print(x_buy)
-    print(x_sell)
-
+    #print(x)
+    #print(x_buy)
+    #print(x_sell)
     """
     #construct complete Constraints
     con = Constraints(port,(2*k+1)*n, k)
