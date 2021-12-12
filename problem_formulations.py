@@ -53,13 +53,19 @@ def variable_transaction_cost_setup(portfolio: Portfolio, t: float, k: int):
     constraints.add_random_var_transaction_cost_equality()
     sigma = portfolio.covar_matrix
     mu = portfolio.asset_returns.reshape(portfolio.n, 1)
-    p = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
-    q = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
-    for i in range(k-1):
-        p = np.vstack((p,np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)))
-        q = np.vstack((q,np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)))
+    bounds = np.random.uniform(0.01 * (1 / portfolio.n), 0.5 * (1 / portfolio.n), k + 1)
+    bounds[0] = 0.01 * (1 / portfolio.n)
+    bounds[k] = 0.5 * (1 / portfolio.n)
+    bounds.sort()
+    p = np.random.uniform(bounds[0], bounds[1], portfolio.n).reshape(portfolio.n, 1)
+    q = np.random.uniform(bounds[0], bounds[1], portfolio.n).reshape(portfolio.n, 1)
+    for i in range(1,k):
+        p_tmp = np.random.uniform(bounds[i], bounds[i + 1], (portfolio.n))
+        q_tmp = np.random.uniform(bounds[i], bounds[i + 1], (portfolio.n))
+        p = np.vstack((p,p_tmp.reshape(portfolio.n,1)))
+        q = np.vstack((q,q_tmp.reshape(portfolio.n,1)))
 
-    c = np.vstack((mu,p,q)) * (t)
+    c = np.vstack((mu,p*(-1),q*(-1))) * (-t)
     C = np.zeros((n_x_solution,n_x_solution))
     C[0:portfolio.n, 0:portfolio.n] = sigma
 

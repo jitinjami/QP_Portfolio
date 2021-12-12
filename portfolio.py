@@ -59,5 +59,5 @@ class Portfolio:
         self.covar_matrix = self.covar_matrix / T
 
         # generate random weights
-        self.asset_weights = np.asarray(np.random.randint(0, 100, self.n), dtype=np.float)
+        self.asset_weights = np.asarray(np.random.randint(0, 100, self.n))
         self.asset_weights = self.asset_weights / np.sum(self.asset_weights)
