@@ -25,15 +25,20 @@ def prep(P,q,con:Constraints):
     b = con.b.reshape(len(con.b),)
     return P,q,G,h,A,b
 
-
-list_of_n = [n for n in range(2,99)]
+n = 5
+list_of_n = [n for n in range(2,n)]
 t = 0.1
 k = 2
 solvers = ['cvxopt','quadprog']
-
-for n in list_of_n:
-    for solver in solvers:
+basic_df = pd.DataFrame(data={'cvxopt':list_of_n,'quadprog':list_of_n, 'qpOases':list_of_n})
+short_df = pd.DataFrame(data={'cvxopt':list_of_n,'quadprog':list_of_n, 'qpOases':list_of_n})
+fixed_df = pd.DataFrame(data={'cvxopt':list_of_n,'quadprog':list_of_n, 'qpOases':list_of_n})
+variable_df = pd.DataFrame(data={'cvxopt':list_of_n,'quadprog':list_of_n, 'qpOases':list_of_n})
+for i in range(len(list_of_n)):
+    for j in range(len(solvers)):
         #Basic Markowitz Model
+        n = list_of_n[i]
+        solver = solvers[j]
         port = Portfolio(n, 5)
         P,q, con = basic_markowitz_set_up(port,t)
         P,q,G,h,A,b = prep_basic(P,q, con)
@@ -41,7 +46,7 @@ for n in list_of_n:
         start = time.time()
         x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
         end = time.time()
-
+        basic_df.iloc[i,j] = end - start
         #Short sales Model
         port = Portfolio(n, 5)
         P,q, con = short_sales_setup(port,t)
@@ -50,6 +55,7 @@ for n in list_of_n:
         start = time.time()
         x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
         end = time.time()
+        short_df.iloc[i,j] = end - start
 
         #Fixed transaction
         port = Portfolio(n, 5)
@@ -58,11 +64,18 @@ for n in list_of_n:
         start = time.time()
         x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
         end = time.time()
+        fixed_df.iloc[i,j] = end - start
 
         #Variable transaction
-        port = Portfolio(n, 5)
+        port = Portfolio(list_of_n[i], 5)
         P,q, con = variable_transaction_cost_setup(port, t, k)
         P,q,G,h,A,b = prep(P,q, con)
         start = time.time()
         x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
         end = time.time()
+        variable_df.iloc[i,j] = end - start
+
+basic_df.to_csv('basics.csv')
+short_df.to_csv('short.csv')
+fixed_df.to_csv('fixed.csv')
+variable_df.to_csv('variable.csv')
