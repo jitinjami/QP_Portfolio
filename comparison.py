@@ -8,7 +8,7 @@ import time
 import pandas as pd
 
 def prep_basic(P,q,con:Constraints):
-    P = np.dot(P.T,P)
+    #P = np.dot(P.T,P)
     q = q.reshape((n,))
     G = -np.eye(n)
     h = np.zeros(n).reshape((n,))
@@ -25,7 +25,7 @@ def prep(P,q,con:Constraints):
     b = con.b.reshape(len(con.b),)
     return P,q,G,h,A,b
 
-n = 99
+n = 100
 list_of_n = [n for n in range(2,n)]
 t = 0.1
 k = 2
@@ -76,7 +76,7 @@ for i in range(len(list_of_n)):
         end = time.time()
         variable_df.iloc[i,j] = end - start
 #print(basic_df)
-basic_df.to_csv('basics.csv')
-short_df.to_csv('short.csv')
-fixed_df.to_csv('fixed.csv')
-variable_df.to_csv('variable.csv')
+basic_df.to_csv('basics1.csv')
+short_df.to_csv('short1.csv')
+fixed_df.to_csv('fixed1.csv')
+variable_df.to_csv('variable1.csv')
