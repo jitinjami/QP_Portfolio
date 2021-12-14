@@ -76,7 +76,7 @@ for i in range(len(list_of_n)):
         end = time.time()
         variable_df.iloc[i,j] = end - start
 #print(basic_df)
-basic_df.to_csv('basics1.csv')
-short_df.to_csv('short1.csv')
-fixed_df.to_csv('fixed1.csv')
-variable_df.to_csv('variable1.csv')
+basic_df.to_csv('basics10.csv')
+short_df.to_csv('short10.csv')
+fixed_df.to_csv('fixed10.csv')
+variable_df.to_csv('variable10.csv')
