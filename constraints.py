@@ -221,7 +221,7 @@ class Constraints:
         h_lower = np.zeros((2*self.k*self.n_assets,1))
         purchase_bound = purchase_weight_vector_list[0].reshape(len(purchase_weight_vector_list[0]),1)
         sales_bound = sale_weight_vector_list[0].reshape(len(sale_weight_vector_list[0]),1)
-        for i in range(self.k-1):
+        for i in range(1,self.k):
             purchase_bound = np.vstack(
                 (purchase_bound,purchase_weight_vector_list[i].reshape(len(purchase_weight_vector_list[i]),1)))
             sales_bound = np.vstack(

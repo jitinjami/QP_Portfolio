@@ -37,7 +37,7 @@ def fixed_transaction_cost_setup(portfolio: Portfolio, t: float):
     p = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
     q = np.random.uniform(0.005, 0.05, portfolio.n).reshape(portfolio.n, 1) * (-1)
     c = np.vstack((mu, p, q)) * (t)
-    C = np.eye(n_x_solution)
+    C = np.zeros((n_x_solution,n_x_solution))
     C[0:portfolio.n, 0:portfolio.n] = sigma
 
     return C,c,constraints
@@ -66,7 +66,7 @@ def variable_transaction_cost_setup(portfolio: Portfolio, t: float, k: int):
         q = np.vstack((q,q_tmp.reshape(portfolio.n,1)))
 
     c = np.vstack((mu,p*(-1),q*(-1))) * (-t)
-    C = np.eye(n_x_solution)
+    C = np.zeros((n_x_solution,n_x_solution))
     C[0:portfolio.n, 0:portfolio.n] = sigma
 
     return C,c,constraints

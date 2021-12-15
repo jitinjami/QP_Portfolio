@@ -69,7 +69,7 @@ class testProblemFormulation(unittest.TestCase):
 class test_Solutions(unittest.TestCase):
     def test_solution_cvxopt(self):
         eps = 10e-3
-        n = 200
+        n = 5
         k = 3
         t = 0.1
         port = Portfolio(n, 5)
