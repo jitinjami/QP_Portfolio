@@ -16,7 +16,7 @@ import time
 if __name__ == '__main__':
 
     # define parameters
-    list_of_n = [n for n in range(10, 400,10)]
+    list_of_n = [n for n in range(10, 500,10)]
     t = 0.1
     k = 2
     m=10
@@ -106,9 +106,9 @@ if __name__ == '__main__':
             x, x_buy, x_sell, rt = solve_sparse_cone_qp(P, q, con)
             runtime += rt
         variable_df.iloc[i, 1] = runtime / m
-    basic_df.to_csv('basics10.csv')
-    short_df.to_csv('short10.csv')
-    fixed_df.to_csv('fixed10.csv')
-    variable_df.to_csv('variable10.csv')
+    basic_df.to_csv('basics.csv')
+    short_df.to_csv('short.csv')
+    fixed_df.to_csv('fixed.csv')
+    variable_df.to_csv('variable.csv')
     pass
 
