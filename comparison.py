@@ -29,7 +29,7 @@ n = 100
 list_of_n = [n for n in range(2,n)]
 t = 0.1
 k = 2
-solvers = ['cvxopt', 'ecos', 'osqp', 'quadprog', 'scs']
+solvers = ['cvxopt', 'mosek', 'osqp', 'quadprog', 'scs']
 data = {'cvxopt':list_of_n, 'ecos':list_of_n, 'osqp':list_of_n, 'quadprog':list_of_n,'scs':list_of_n}
 basic_df = pd.DataFrame(data=data, index=list_of_n)
 short_df = pd.DataFrame(data=data,index=list_of_n)

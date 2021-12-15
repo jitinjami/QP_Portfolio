@@ -5,6 +5,7 @@ import numpy as np
 from cvxopt import matrix, solvers
 from problem_formulations import *
 from optimizers import *
+import time
 
 class testPorfolio(unittest.TestCase):
     def test_PortfolioGeneration(self):
@@ -69,12 +70,41 @@ class testProblemFormulation(unittest.TestCase):
 class test_Solutions(unittest.TestCase):
     def test_solution_cvxopt(self):
         eps = 10e-3
-        n = 5
+        n = 200
         k = 3
         t = 0.1
         port = Portfolio(n, 5)
-        C, c, con = variable_transaction_cost_setup(port, t, k)
-        x, x_buy, x_sell = solve_qp(C, c, con)
+        C, c, con = variable_transaction_cost_setup(port, t,k)
+        start = time.time()
+        x, x_buy, x_sell,t = solve_qp(C, c, con)
+        print(f"runtime was {time.time() - start}")
+        sum = np.sum(x)
+        self.assertAlmostEqual(sum, 1.0, 8, "The sum of the new weights does not sum up to 1")
+
+        #test if x-x_buy+x_sell = x0
+        test_x = x.copy()
+        for i in range(k):
+            test_x = test_x -x_buy[i]+x_sell[i]
+        test_x = test_x.T[0]
+        diff = np.sum(test_x - port.asset_weights)
+        self.assertAlmostEqual(diff, 0.0, 8, "your buy and sell assets are not equal")
+
+        # test if you dont buy and sell the same stock
+        for i in range (k):
+            for j in range(n):
+                if not (x_buy[i][j,0]<eps):
+                    self.assertAlmostEqual(x_sell[i][j,0],0.0,3,f"you are selling and buying the asset {j} of block {i}")
+
+    def test_solution_sparse_cvxopt(self):
+        eps = 10e-3
+        n = 100
+        k = 3
+        t = 0.1
+        port = Portfolio(n, 5)
+        C, c, con = variable_transaction_cost_setup(port, t,k)
+        start = time.time()
+        x, x_buy, x_sell = solve_sparse_cone_qp(C, c, con)
+        print(f"runtime was {time.time()-start}")
         sum = np.sum(x)
         self.assertAlmostEqual(sum, 1.0, 8, "The sum of the new weights does not sum up to 1")
 
