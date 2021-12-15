@@ -5,10 +5,10 @@ import glob
 import os
 smoothing_factor = 0.1
 pwd = os.path.abspath(os.getcwd())
-basic_files = [file for file in sorted(glob.glob(pwd + "/basics*"))]
-short_files = [file for file in sorted(glob.glob(pwd + "/short*"))]
-fixed_files = [file for file in sorted(glob.glob(pwd + "/fixed*"))]
-variable_files = [file for file in sorted(glob.glob(pwd + "/variable*"))]
+basic_files = [file for file in sorted(glob.glob(pwd + "/data//basics*"))]
+short_files = [file for file in sorted(glob.glob(pwd + "/data//short*"))]
+fixed_files = [file for file in sorted(glob.glob(pwd + "/data//fixed*"))]
+variable_files = [file for file in sorted(glob.glob(pwd + "/data//variable*"))]
 basic_dfs = []
 for i in range(len(basic_files)):
     seed_csv = basic_files[i]
@@ -22,7 +22,7 @@ basic_df.plot()
 plt.xlabel('Number of assets')
 plt.ylabel('Time')
 plt.title('Basic Markowitz Problem')
-plt.savefig('basic_image.png')
+plt.savefig('./data/basic_image.png')
 
 short_dfs = []
 for i in range(len(short_files)):
@@ -37,7 +37,7 @@ short_df.plot()
 plt.xlabel('Number of assets')
 plt.ylabel('Time')
 plt.title('Short Sales Constraints')
-plt.savefig('short_image.png')
+plt.savefig('./data/short_image.png')
 
 fixed_dfs = []
 for i in range(len(fixed_files)):
@@ -52,7 +52,7 @@ fixed_df.plot()
 plt.xlabel('Number of assets')
 plt.ylabel('Time')
 plt.title('Fixed Transaction Costs')
-plt.savefig('fixed_image.png')
+plt.savefig('./data/fixed_image.png')
 
 variable_dfs = []
 for i in range(len(variable_files)):
@@ -67,4 +67,4 @@ variable_df.plot()
 plt.xlabel('Number of assets')
 plt.ylabel('Time')
 plt.title('Variable Transactions Costs')
-plt.savefig('variable_image.png')
+plt.savefig('./data/variable_image.png')
