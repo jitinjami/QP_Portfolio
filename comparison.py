@@ -25,15 +25,15 @@ def prep(P,q,con:Constraints):
     b = con.b.reshape(len(con.b),)
     return P,q,G,h,A,b
 
-n = 100
+n = 10
 list_of_n = [n for n in range(2,n)]
 t = 0.1
 k = 2
-seeds = 10
+seeds = 1
 
 for seed in range(1,seeds+1):
-    solvers = ['cvxopt', 'quadprog', 'ecos']
-    data = {'cvxopt':list_of_n, 'quadprog':list_of_n, 'ecos':list_of_n}
+    solvers = ['cvxopt', 'qpoases','quadprog', 'ecos']
+    data = {'cvxopt':list_of_n, 'qpoases': list_of_n,'quadprog':list_of_n, 'ecos':list_of_n}
     basic_df = pd.DataFrame(data=data, index=list_of_n)
     short_df = pd.DataFrame(data=data,index=list_of_n)
     for i in range(len(list_of_n)):
@@ -59,29 +59,29 @@ for seed in range(1,seeds+1):
             short_df.iloc[i,j] = end - start
 
 
-    solver = 'cvxopt'
-    data = {'cvxopt':list_of_n}
-    fixed_df = pd.DataFrame(data=data,index=list_of_n)
+    solvers = ['cvxopt', 'qpoases']
+    data = {'cvxopt':list_of_n, 'qpoases':list_of_n}
+    fixed_df = pd.DataFrame(data=data, index=list_of_n)
     variable_df = pd.DataFrame(data=data,index=list_of_n)
-
     for i in range(len(list_of_n)):
-        #Fixed transaction
-        port = Portfolio(n, 5)
-        P,q, con = fixed_transaction_cost_setup(port,t)
-        P,q,G,h,A,b = prep(P,q, con)
-        start = time.time()
-        x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
-        end = time.time()
-        fixed_df.iloc[i,:] = end - start
+        for j in range(len(solvers)):
+            #Fixed transaction
+            port = Portfolio(n, 5)
+            P,q, con = fixed_transaction_cost_setup(port,t)
+            P,q,G,h,A,b = prep(P,q, con)
+            start = time.time()
+            x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
+            end = time.time()
+            fixed_df.iloc[i,j] = end - start
 
-        #Variable transaction
-        port = Portfolio(list_of_n[i], 5)
-        P,q, con = variable_transaction_cost_setup(port, t, k)
-        P,q,G,h,A,b = prep(P,q, con)
-        start = time.time()
-        x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
-        end = time.time()
-        variable_df.iloc[i,:] = end - start
+            #Variable transaction
+            port = Portfolio(list_of_n[i], 5)
+            P,q, con = variable_transaction_cost_setup(port, t, k)
+            P,q,G,h,A,b = prep(P,q, con)
+            start = time.time()
+            x = qpsolvers.solve_qp(P, q, G, h, A, b ,solver=solver)
+            end = time.time()
+            variable_df.iloc[i,j] = end - start
 
     basic_df.to_csv('./data/basics{}.csv'.format(seed))
     short_df.to_csv('./data/short{}.csv'.format(seed))
