@@ -1,5 +1,5 @@
 """
-This file defines an portfolio Class
+This file defines an portfolio simulating Class
 """
 
 # imports
@@ -25,6 +25,7 @@ class Portfolio:
         """
         assert n > 1, f"Portfolio needs to contain at leas one asset. n needs to be larger than 1 but is {n}"
         assert T > 1, f"Negative time series not possible T needs to be larger than 1 but is {T}"
+        assert T >= n, f"to calculate Sigma T must be larger or equalt to n but {T} (T) is not bigger than {n} (n)."
         self.n = n
         self._exp = portfolio_expected_return
 

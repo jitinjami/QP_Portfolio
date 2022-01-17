@@ -4,19 +4,34 @@ This file defines the different solvers
 
 # imports
 import numpy as np
-from cvxopt import matrix, solvers, spmatrix, sparse
-from portfolio import Portfolio
+from cvxopt import matrix, solvers, sparse
 from constraints import Constraints
-from qpsolvers import solve_qp
 import time
 
-# imported optimizers
+##### imported optimizers #####
+
 def solve_qp(C,c,constraints: Constraints):
+    """
+    Solves the Problem of form
+
+    min {cT x - 1/2 xT C x | G x <= h, A x = b}
+
+    using a qp solver provided by cvxopt.
+
+    Further it measures runtime.
+
+    :param C: Matrix C of problem formulation
+    :param c: vector c of problem formulation
+    :param constraints: constraints Object which might contain A,b,G and h
+    :return: x, x_buy, x_sell Decomposed solution. x are the weights, x_buy a list of buys per bucket, x_sell of sells
+    per bucket
+    """
     n_assets = np.size(c)
     C = matrix(C)
     c = matrix(c.T[0])
     runtime = 0
 
+    # only equality constraints
     if hasattr(constraints,'A') and not hasattr(constraints,'G'):
         A = matrix(constraints.A)
         b = matrix(constraints.b.T[0])
@@ -25,12 +40,16 @@ def solve_qp(C,c,constraints: Constraints):
         start = time.time()
         sol = solvers.qp(C,c, A=A, b=b, G=G, h=h)
         runtime = time.time()-start
+
+    # only inequality constraints
     if hasattr(constraints,'G') and not hasattr(constraints,'A'):
         G = matrix(constraints.G)
         h = matrix(constraints.h.T[0])
         start = time.time()
         sol = solvers.qp(C,c, G=G, h=h)
         runtime = time.time() - start
+
+    # equality and inequality constraints
     if hasattr(constraints,'A') and hasattr(constraints,'G'):
         A = matrix(constraints.A)
         b = matrix(constraints.b.T[0])
@@ -63,11 +82,28 @@ def solve_qp(C,c,constraints: Constraints):
     return x,x_buy,x_sell,runtime
 
 def solve_sparse_cone_qp(C,c,constraints: Constraints):
+    """
+    Solves the Problem of form
+
+    min {cT x - 1/2 xT C x | G x <= h, A x = b}
+
+    using a qp solver using spare matrices provided by cvxopt.
+
+    Further it measures runtime.
+
+    :param C: Matrix C of problem formulation
+    :param c: vector c of problem formulation
+    :param constraints: constraints Object which might contain A,b,G and h
+    :return: x, x_buy, x_sell Decomposed solution. x are the weights, x_buy a list of buys per bucket, x_sell of sells
+    per bucket
+    """
+
     n_assets = np.size(c)
     C = sparse(matrix(C))
     c = matrix(c.T[0])
     runtime = 0
 
+    # only equality constraints
     if hasattr(constraints,'A') and not hasattr(constraints,'G'):
         A = sparse(matrix(constraints.A))
         b = matrix(constraints.b.T[0])
@@ -76,12 +112,16 @@ def solve_sparse_cone_qp(C,c,constraints: Constraints):
         start = time.time()
         sol = solvers.qp(C,c, A=A, b=b, G=G, h=h)
         runtime = time.time() - start
+
+    # only inequality constraints
     if hasattr(constraints,'G') and not hasattr(constraints,'A'):
         G = sparse(matrix(constraints.G))
         h = matrix(constraints.h.T[0])
         start = time.time()
         sol = solvers.qp(C,c, G=G, h=h)
         runtime = time.time() - start
+
+    # equality and inequality constraints
     if hasattr(constraints,'A') and hasattr(constraints,'G'):
         A = sparse(matrix(constraints.A))
         b = matrix(constraints.b.T[0])
@@ -90,6 +130,8 @@ def solve_sparse_cone_qp(C,c,constraints: Constraints):
         start = time.time()
         sol = solvers.qp(C,c, G, h, A, b)
         runtime = time.time() - start
+
+
     # decompose solution
     assert sol['status'] == "optimal", "solver did not find optimal solution"
     x_complete = np.asarray(sol['x'])
@@ -112,8 +154,14 @@ def solve_sparse_cone_qp(C,c,constraints: Constraints):
 
     return x, x_buy, x_sell, runtime
 
-# own optimizers
+##### own optimizers #####
+"""
+This was our first try to implement the optimized solver but be did not finish it. This method is deprecated.
+"""
 def _feasable(x0,A,b,G,h):
+    """
+    Depricated helper function
+    """
     n = len(x0)
     A = A[:,0:n]
     G = G[:,0:n]
@@ -122,6 +170,13 @@ def _feasable(x0,A,b,G,h):
     return True
 
 def optimized_OP(C,c, con: Constraints):
+    """
+    !!!!!DEPRECATED!!!!!
+    :param C:
+    :param c:
+    :param con:
+    :return:
+    """
     var_costs = (con.k != None)
     n=con.n_assets
 
@@ -169,9 +224,5 @@ def optimized_OP(C,c, con: Constraints):
         res = np.linalg.solve(mat, rhs)
         x = res[0:n_curr]
         u_tmp = res[n_curr:0]
-
-        print("test")
-
-    print ("huhu")
 
     pass

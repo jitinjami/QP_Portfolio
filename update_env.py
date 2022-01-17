@@ -1,5 +1,6 @@
 """
-Run to update eca.yml file
+This file makes it more convenient to update the .yml file and keep the git up to date.
+Run to update and push eca.yml file
 """
 import os
 

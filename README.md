@@ -5,7 +5,41 @@
 Execute
 `$ conda env create -f env.yml`
 
+to create environment. With this environment all scripts should be executable.
+
+## Structure
+
+### Portfolio
+The file [portfolio.py](./portfolio.py) contains the definition of a portfolio class. 
+This class generates a random portfolio with n assets and a Timeseries of length T.
+This class contains the covariance matrix, the asset weiths the asset returns and other helper objects.
+
+### Constaints
+
+The constrains class is defined in [constraints.py](./comparison.py). The constraints object is initialized once, 
+setting some basic variables but no actual constraints. To add constraints the add_<constraints>_constraings() methods 
+have to be called. They generate the Matrices A,G and vectors h,b for Ax = b and Gx <= h according to the semantic 
+constraints which are added. Helperfunctions ensure that if other constraints have already been added, the new 
+constraints are concatenated with the old ones row-wise.
+
+The constraints object holds the matrices as well as some other variables like shapes and interval bounderies if needed 
+for these constraints.
+
+### Problem formulation
+
+@Valentin
+
+### Optimizers
+
+@ Valentin
+
+### Others
+
+@Jitin: feel free to describe some of your files...
+
 ## Usage
+
+@Jitin
 
 ## About
 ### Built With
