@@ -27,11 +27,16 @@ for these constraints.
 
 ### Problem formulation
 
-@Valentin
+The file [problem_formulations.py](./problem_formulations.py) defines the system Matrices for the Problem in standart 
+formulation min {-t cT x + 1/2 xT C x | G x <= h, A x = b}. The matrix C and the vector c is calculated directly, the 
+constraints are added to the constraints object as described above. The return value of the problem fomulation contains 
+everythin to solve the problem.
 
 ### Optimizers
 
-@ Valentin
+the file [optimizers.py](./optimizers.py) contains the optimizers. If contains two wrappers for a solver provided by 
+the cvxopt library. One solver uses sparse matrices and the other full matrices. We tried to implement an optimized 
+version however did not finish it. This method is thus depricated.
 
 ### Others
 
