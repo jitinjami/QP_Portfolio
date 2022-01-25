@@ -40,6 +40,6 @@ dependencies:
     - pyparsing==3.0.6
     - python-dateutil==2.8.2
     - pytz==2021.3
-    - qpsolvers==1.7.2
+    - qpsolvers[all_pypi_solvers]
     - quadprog==0.1.11
     - scipy==1.7.3
