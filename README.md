@@ -6,6 +6,9 @@ Execute
 `$ conda env create -f env.yml`
 
 to create environment. With this environment all scripts should be executable.
+Follow instructions on 'https://scaron.info/doc/qpsolvers/installation.html' for installing qpsolvers and respective solvers included in that.
+
+Please note the qpOases only works on Linux systems, we were unable to port that to MacOS.
 
 ## Structure
 

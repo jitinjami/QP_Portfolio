@@ -41,7 +41,7 @@ n = 100
 list_of_n = [n for n in range(2,n)] #List of number of assets
 t = 0.1
 k = 2
-seeds = 10
+seeds = 10 #Number of seed runs
 
 for seed in range(1,seeds+1):
     solvers = ['cvxopt','quadprog', 'ecos'] #Different solvers available on qpsolvers
