@@ -156,7 +156,7 @@ def solve_sparse_cone_qp(C,c,constraints: Constraints):
 
 ##### own optimizers #####
 """
-This was our first try to implement the optimized solver but be did not finish it. This method is deprecated.
+This was our first try to implement the optimized solver but we did not finish it. This method is deprecated.
 """
 def _feasable(x0,A,b,G,h):
     """

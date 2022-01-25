@@ -16,7 +16,7 @@ This class contains the covariance matrix, the asset weiths the asset returns an
 
 ### Constaints
 
-The constrains class is defined in [constraints.py](./comparison.py). The constraints object is initialized once, 
+The constrains class is defined in [constraints.py](./constraints.py). The constraints object is initialized once, 
 setting some basic variables but no actual constraints. To add constraints the add_<constraints>_constraings() methods 
 have to be called. They generate the Matrices A,G and vectors h,b for Ax = b and Gx <= h according to the semantic 
 constraints which are added. Helperfunctions ensure that if other constraints have already been added, the new 
@@ -34,17 +34,20 @@ everythin to solve the problem.
 
 ### Optimizers
 
-the file [optimizers.py](./optimizers.py) contains the optimizers. If contains two wrappers for a solver provided by 
+The file [optimizers.py](./optimizers.py) contains the optimizers. If contains two wrappers for a solver provided by 
 the cvxopt library. One solver uses sparse matrices and the other full matrices. We tried to implement an optimized 
 version however did not finish it. This method is thus depricated.
 
 ### Others
 
-@Jitin: feel free to describe some of your files...
+The file [comparison.py](./comparison.py) generates data from the solution of various open source qp solvers like cvxopt, quadprog, ecos, qpOases on our problem formulations. The comparison is done between all methods for the first 2 problem formulations but only done between cvxopt and quadprog for the 2 complex models. It also generates the plotting images as seen on the report (Figure 3).
+It uses an opensource library qpsolvers that enables us to use many different algorithms apart from just cvxopt.
 
 ## Usage
 
-@Jitin
+The Portfolio class helps us generate a random portfolio to begin our analysis with. In the Constraint class, we have different kinds of constraints that are used for formulating our problems. The problem formulation function file uses the Constraints class in the format we can use to solve. Let it be open source solvers or kerna optmizer.
+
+One can use the Portfolio class to define a portfolio of their own and the problem formulation function file to define their own unique problem formulations or use existing formulations where one can change different aspects (like changing the risk factor etc)
 
 ## About
 ### Built With
