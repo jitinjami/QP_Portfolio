@@ -41,16 +41,22 @@ The file [optimizers.py](./optimizers.py) contains the optimizers. If contains t
 the cvxopt library. One solver uses sparse matrices and the other full matrices. We tried to implement an optimized 
 version however did not finish it. This method is thus depricated.
 
-### Others
+### Comparison
 
 The file [comparison.py](./comparison.py) generates data from the solution of various open source qp solvers like cvxopt, quadprog, ecos, qpOases on our problem formulations. The comparison is done between all methods for the first 2 problem formulations but only done between cvxopt and quadprog for the 2 complex models. It also generates the plotting images as seen on the report (Figure 3).
 It uses an opensource library qpsolvers that enables us to use many different algorithms apart from just cvxopt.
+
+### Main
+
+The file [main.py](./main.py) contains a script to perform runtime measurements. In the first section of the main method, you can define specific parameters. Behind all parameters a short description of the variable can be found. If the runtime is too long, decreasing m or the upper bound of n might help.
 
 ## Usage
 
 The Portfolio class helps us generate a random portfolio to begin our analysis with. In the Constraint class, we have different kinds of constraints that are used for formulating our problems. The problem formulation function file uses the Constraints class in the format we can use to solve. Let it be open source solvers or kerna optmizer.
 
 One can use the Portfolio class to define a portfolio of their own and the problem formulation function file to define their own unique problem formulations or use existing formulations where one can change different aspects (like changing the risk factor etc)
+
+To run the time measurements just run `$ python3 main.py`. Parameters have to be adjusted in the soure code. The results will be written into the folder ./data
 
 ## About
 ### Built With
