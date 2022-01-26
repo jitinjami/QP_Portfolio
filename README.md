@@ -63,7 +63,7 @@ To run the time measurements just run `$ python3 main.py`. Parameters have to be
 
 - Python
 - YAML
-- MS Excel
+- cvxopt
 
 ### Authors
 
