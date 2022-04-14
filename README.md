@@ -1,4 +1,4 @@
-# QP_Portfolio
+# Quadratic Programming for Investment Portfolio Optimization
 
 ## Installation
 ### Using Conda
